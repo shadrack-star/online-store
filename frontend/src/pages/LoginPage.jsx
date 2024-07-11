@@ -1,17 +1,44 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-const loginPage = () => {
+const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     // Handle login logic here
-    console.log('Email:', email);
-    console.log('Password:', password);
-    console.log('Remember Me:', rememberMe);
+    fetch("http://localhost:5000/api/login", { 
+      
+      // Adding method type 
+      method: "POST", 
+        
+      // Adding body or contents to send 
+      body: JSON.stringify({ 
+          email: email,
+          password: password
+      }), 
+        
+      // Adding headers to the request 
+      headers: { 
+          "Content-type": "application/json; charset=UTF-8"
+      } 
+  }) 
+    
+  // Converting to JSON 
+  .then(response => response.json()) 
+    
+  // Displaying results to console 
+  .then(data =>{
+    localStorage.setItem("access_token", data.access_token)
+    navigate('/');
+  } );
+    
+    // Assuming the login is successful, navigate to the home page
+    // You might want to add actual authentication logic here
+    
   };
 
   return (
@@ -111,4 +138,4 @@ const loginPage = () => {
   );
 };
 
-export default loginPage;
+export default LoginPage;

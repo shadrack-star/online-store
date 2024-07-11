@@ -1,4 +1,3 @@
-
 from faker import Faker
 from app import app, bcrypt, db
 from models import User, Product, Order, Review, OrderItem

@@ -16,6 +16,7 @@ const OrderForm = () => {
     expiryDate: '',
     cvv: '',
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,6 +31,26 @@ const OrderForm = () => {
     // Handle form submission logic here
     console.log(formData);
     // Example: send data to backend, process order, etc.
+    fetch("http://localhost:5000/api/orders", {
+      // Adding method type
+      method: "POST",
+
+      // Adding body or contents to send
+      body: JSON.stringify({
+        formData: formData,
+
+      }),
+
+      // Adding headers to the request
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      // Converting to JSON
+      .then((response) => response.json())
+
+      // Displaying results to console
+      .then((json) => navigate("/products"));
   };
 
   return (
@@ -106,29 +127,8 @@ const OrderForm = () => {
                 required
               />
             </label>
-            <label className="block mb-2">
-              <span className="text-gray-700">Expiry Date</span>
-              <input
-                type="text"
-                name="expiryDate"
-                value={formData.expiryDate}
-                onChange={handleChange}
-                className="form-input mt-1 block w-full"
-                placeholder="MM/YY"
-                required
-              />
-            </label>
-            <label className="block mb-2">
-              <span className="text-gray-700">CVV</span>
-              <input
-                type="text"
-                name="cvv"
-                value={formData.cvv}
-                onChange={handleChange}
-                className="form-input mt-1 block w-full"
-                required
-              />
-            </label>
+            
+            
           </>
         )}
         <button

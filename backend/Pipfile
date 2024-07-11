@@ -12,6 +12,7 @@ flask-cors = "*"
 flask-jwt-extended = "*"
 faker = "*"
 sqlalchemy-serializer = "*"
+pyjwt = "==2.6.0"
 
 [dev-packages]
 

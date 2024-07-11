@@ -8,7 +8,7 @@ export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
 
   const add_event = (event_name, location, event_date, description) => {
-    fetch(`http://localhost:5000/api/products`, {
+    fetch(`http://localhost:5001/api/products`, {
         method: 'POST',
         body: JSON.stringify({
             event_name, 
@@ -40,7 +40,7 @@ export const ProductProvider = ({ children }) => {
 };
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/products`, {
+    fetch(`http://localhost:5001/api/products`, {
       method: 'GET',
       
   

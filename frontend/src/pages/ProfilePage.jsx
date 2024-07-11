@@ -1,89 +1,139 @@
-import React, { useContext } from 'react';
-import { ProductContext } from '../context/ProductContext';
-import { Link } from 'react-router-dom';
-//import './ProfilePage.css'; // Ensure you have this CSS file for styles
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { UserContext } from "../context/UserContext";
+import { useContext } from "react";
 
-const ProfilePage = () => {
-  const { products, error } = useContext(ProductContext);
+const Profile = () => {
+  const {logoutUser}=useContext(UserContext);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    profile_image: "",
+  });
 
-  if (error) {
-    return <div>Error: {error}</div>;
+  useEffect(() => {
+    const fetchCurrentUser = () => {
+      fetch('http://localhost:5000/api/current_user', {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch current user');
+          }
+          return response.json(); // Parse JSON response
+        })
+        .then(data => {
+          setCurrentUser(data);
+          setFormData({
+            username: data.username || "",
+            password: data.password || "",
+            profile_image: data.profile_image || "",
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching current user:', error);
+          toast.error('Failed to fetch current user');
+        });
+    };
+  
+    fetchCurrentUser();
+  }, []);
+  
+   
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    fetch(`http:localhost:5000/api/current_user/${currentUser.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+      body: JSON.stringify({
+        username: formData.username,
+        password: formData.password,
+        profile_image: formData.profile_image,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to update profile");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        toast.success(data.success);
+        setCurrentUser((prevUser) => ({
+          ...prevUser,
+          username: formData.username || prevUser.username,
+          password: formData.password || prevUser.password,
+          profile_image: formData.profile_image || prevUser.profile_image,
+        }));
+      })
+      .catch((error) => {
+        console.log("Error updating profile:", error);
+        toast.error("Failed to update profile");
+      });
+  };
+
+  if (!currentUser) {
+    return <div>Log in to view your profile</div>
   }
+
+  const { username, password, profile_image } = formData;
 
   return (
     <div>
-      <div className="header">
-        <h1>Online Store</h1>
+      <h2>Profile</h2>
+      <div className="rounded-full">
+        <img src={formData.profile_image } alt ="profile" className="size-2 rounded-full"/>
       </div>
-
-      <div className="profile-container">
-        <div className="profile-info">
-          <img src="profile-placeholder.png" alt="Profile" />
-          <h2>Enock</h2>
-          <p>Amazon customer</p>
-        </div>
-        
-        <div className="payment-info">
-          <h3>Payment Method</h3>
-          <p>Visa ending in 1234 <a href="#">(Add/Edit Payment Method)</a></p>
-          <h3>Balance</h3>
-          <p>$120.00 <a href="#">(Deposit/Withdraw)</a></p>
-        </div>
-        
-        <div className="trade-history">
-          <h3>Trade History</h3>
-          <ul>
-            <li>
-              <p>Item: Samsung Galaxy S21</p>
-              <p>Date: 2024-07-01</p>
-              <p>Amount: $800.00</p>
-              <p>Status: Completed</p>
-            </li>
-            <li>
-              <p>Item: Apple MacBook Pro</p>
-              <p>Date: 2024-06-25</p>
-              <p>Amount: $1,200.00</p>
-              <p>Status: Completed</p>
-            </li>
-            <li>
-              <p>Item: Sony WH-1000XM4 Headphones</p>
-              <p>Date: 2024-06-20</p>
-              <p>Amount: $350.00</p>
-              <p>Status: Completed</p>
-            </li>
-          </ul>
-          <a href="#">View All Trades</a>
-        </div>
-
-        <a href="#" className="logout-button">Logout</a>
-      </div>
-
-      <div className="products-section">
-        <h2>Products</h2>
-        <div className="product-list">
-          {products.length === 0 ? (
-            <p>No products available.</p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
-                <div key={product.id} className="border p-4 rounded shadow">
-                  <Link to={`/products/${product.id}`}>
-                    <h3 className="text-lg font-semibold">{product.name}</h3>
-                    <img
-                      className="w-full h-48 object-cover mt-2"
-                      src={product.image_url}
-                      alt={product.name}
-                    />
-                    <p className="mt-2">Price: ${product.price}</p>
-                  </Link>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <h5>username</h5>
+        <input
+          type="text"
+          name="username"
+          value={username}
+          onChange={handleChange}
+          placeholder="Username"
+          required
+        />
+        <h5>Password</h5>
+        <input
+          type="password"
+          name="password"
+          value={password}
+          onChange={handleChange}
+          placeholder="Password"
+          required
+        />
+        <h5>Image url</h5>
+        <input
+          type="text"
+          name="profile_image"
+          value={profile_image}
+          onChange={handleChange}
+          placeholder="Profile Image URL"
+        />
+        <button type="submit">Update Profile</button>
+      </form>
+      <p
+              onClick={logoutUser}
+              className="block cursor-pointer py-2 px-3 text-lg text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+            >
+              Logout
+            </p>
     </div>
   );
 };
 
-export default ProfilePage;
+export default Profile;

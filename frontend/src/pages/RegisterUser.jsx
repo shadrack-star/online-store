@@ -1,33 +1,48 @@
-
-import { toast } from "react-toastify";
 // import { ToastContainer } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import React, { useState } from 'react';
+import { useState } from "react";
 
 const RegisterUser = () => {
-  const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (password !== confirmPassword) {
-      alert('Passwords do not match!');
+      alert("Passwords do not match!");
       return;
     }
     // Handle registration logic here
-    console.log('Name:', name);
-    console.log('Username:', username);
-    console.log('Email:', email);
-    console.log('Password:', password);
+    fetch("http://localhost:5000/api/register", {
+      // Adding method type
+      method: "POST",
+
+      // Adding body or contents to send
+      body: JSON.stringify({
+        email: email,
+        username: username,
+        password: password,
+      }),
+
+      // Adding headers to the request
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      // Converting to JSON
+      .then((response) => response.json())
+
+      // Displaying results to console
+      .then((json) => navigate("/login"));
   };
 
   return (
     <div className="min-h-screen bg-blue-400 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        
         <h2 className="mt-6 text-center text-3xl leading-9 font-extrabold text-gray-900">
           Register here
         </h2>
@@ -56,7 +71,7 @@ const RegisterUser = () => {
                 <input
                   id="name"
                   name="name"
-                 // placeholder="Enock Maina"
+                  // placeholder="Enock Maina"
                   type="text"
                   required
                   value={name}

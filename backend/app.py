@@ -1,5 +1,3 @@
-# app.py
-
 import random
 from flask import Flask, request, jsonify
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, get_jwt
@@ -7,7 +5,7 @@ from datetime import timedelta
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate  # Import Flask-Migrate
+from flask_migrate import Migrate
 from models import db, User, Product, Order, Review, OrderItem
 from sqlalchemy.exc import IntegrityError
 
@@ -24,7 +22,7 @@ jwt = JWTManager(app)
 
 # Initialize extensions
 db.init_app(app)
-Migrate(app, db)  # Initialize Flask-Migrate
+migrate = Migrate(app, db)  # Initialize Flask-Migrate
 
 # JWT Blacklist
 BLACKLIST = set()
@@ -34,7 +32,7 @@ def check_if_token_in_blocklist(jwt_header, decrypted_token):
     return decrypted_token['jti'] in BLACKLIST
 
 # Routes for authentication
-#register
+# Register
 @app.route("/api/register", methods=["POST"])
 def register_user():
     data = request.get_json()
@@ -70,7 +68,7 @@ def register_user():
         db.session.rollback()
         return jsonify({"error": "Username already exists"}), 400
 
-#login
+# Login
 @app.route("/api/login", methods=["POST"])
 def login_user():
     data = request.get_json()
@@ -85,7 +83,7 @@ def login_user():
 
     return jsonify({"error": "Wrong credentials"}), 401
 
-#fetch current user
+# Fetch current user
 @app.route("/api/current_user", methods=["GET"])
 @jwt_required()
 def current_user():
@@ -100,14 +98,16 @@ def current_user():
             "profile_image": user.profile_image
         }), 200
     return jsonify({"error": "User not found"}), 404
-#logout
+
+# Logout
 @app.route("/api/logout", methods=["DELETE"])
 @jwt_required()
 def logout():
     jti = get_jwt()["jti"]
     BLACKLIST.add(jti)
     return jsonify({"success": "Successfully logged out"}), 200
-#update profile
+
+# Update profile
 @app.route("/api/users/<int:id>", methods=["PUT"])
 @jwt_required()
 def update_user(id):
@@ -123,6 +123,7 @@ def update_user(id):
         return jsonify({"success": "Profile updated successfully"}), 200
     return jsonify({"error": "User not found"}), 404
 
+# Delete user
 @app.route("/api/users/<int:id>", methods=["DELETE"])
 def delete_user(id):
     user = User.query.get(id)
@@ -147,8 +148,6 @@ def create_product():
     db.session.add(new_product)
     db.session.commit()
     return jsonify({"message": "Product created successfully"}), 201
-
-
 
 @app.route("/api/products", methods=["GET"])
 def get_products():
@@ -198,6 +197,11 @@ def update_product(id):
 def delete_product(id):
     product = Product.query.get(id)
     if product:
+        # Delete associated order items
+        OrderItem.query.filter_by(product_id=product.id).delete()
+        # Delete associated reviews
+        Review.query.filter_by(product_id=product.id).delete()
+
         db.session.delete(product)
         db.session.commit()
         return jsonify({"message": "Product deleted successfully"}), 200
