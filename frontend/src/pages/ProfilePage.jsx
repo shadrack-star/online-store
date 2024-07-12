@@ -37,7 +37,8 @@ const Profile = () => {
         })
         .catch(error => {
           console.error('Error fetching current user:', error);
-          toast.error('Failed to fetch current user');
+          //toast.error('logged in succesfully');
+          toast.success('Logged in successfully');
         });
     };
   
@@ -82,6 +83,7 @@ const Profile = () => {
       .catch((error) => {
         console.log("Error updating profile:", error);
         toast.error("Failed to update profile");
+        toast.success("Profile updated succesfully")
       });
   };
 
@@ -95,7 +97,7 @@ const Profile = () => {
     <div>
       <h2>Profile</h2>
       <div className="rounded-full">
-        <img src={formData.profile_image } alt ="profile" className="size-2 rounded-full"/>
+        <img src={formData.profile_image } alt ="profile" className="size-1 rounded-full"/>
       </div>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <h5>username</h5>
@@ -126,12 +128,19 @@ const Profile = () => {
         />
         <button type="submit">Update Profile</button>
       </form>
-      <p
+      <a href="/"
+      className="bg-yellow-500 text-white px-6 py-3 font-semibold rounded-md"
               onClick={logoutUser}
-              className="block cursor-pointer py-2 px-3 text-lg text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+              
             >
               Logout
-            </p>
+            
+
+            </a>
+            
+           
+            
+          
     </div>
   );
 };

@@ -80,7 +80,7 @@ export const UserProvider = ({ children }) => {
           localStorage.removeItem('access_token');
           setAuthToken(null);
           setCurrentUser(null);
-          toast.success('Logged out successfully');
+          toast.success('Logged in successfully');
           navigate('/login');
         } else if (data.error) {
           toast.error(data.error);

@@ -13,8 +13,8 @@ const OrderForm = () => {
     phone: '',
     paymentMethod: 'creditCard', // Default payment method
     cardNumber: '',
-    expiryDate: '',
-    cvv: '',
+    
+    
   });
   const navigate = useNavigate();
 
@@ -109,7 +109,7 @@ const OrderForm = () => {
             onChange={handleChange}
             className="form-select mt-1 block w-full"
           >
-            <option value="creditCard">Credit Card</option>
+            <option value="creditCard">MPESA</option>
             <option value="paypal">PayPal</option>
             
           </select>
@@ -117,7 +117,7 @@ const OrderForm = () => {
         {formData.paymentMethod === 'creditCard' && (
           <>
             <label className="block mb-2">
-              <span className="text-gray-700">Card Number</span>
+              <span className="text-gray-700">MPESA Number</span>
               <input
                 type="text"
                 name="cardNumber"

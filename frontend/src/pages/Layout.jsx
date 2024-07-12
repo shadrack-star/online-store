@@ -2,24 +2,21 @@ import React from "react";
 import { Outlet, Link } from "react-router-dom";
 
 const Layout = () => {
-  // Function to handle logout
   const logout = () => {
-    // Implement your logout logic here, such as clearing localStorage
-    localStorage.removeItem("access_token"); // Example of clearing access token
-    // Redirect or perform any additional cleanup as needed
+    localStorage.removeItem("access_token"); // Clear access token
   };
 
   return (
     <div className="bg-red-300 min-h-screen">
-      <nav className="bg-red-500 text-white p-4">
+      <nav className="bg-gray-800 text-white p-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          {/* Empty div to push items to the right */}
-          <div></div>
-          <div className="flex space-x-6 text-lg"> {/* Adjusted text size */}
-          <Link to="/amazon" className="hover:text-gray-300">
-              Amazon
-            </Link>
-            
+          {/* Amazon link on the left */}
+          <Link to="/amazon" className="text-lg hover:text-gray-300">
+            Amazon
+          </Link>
+
+          {/* Other links on the right */}
+          <div className="flex space-x-6 text-lg">
             <Link to="/products" className="hover:text-gray-300">
               Products
             </Link>
@@ -35,8 +32,6 @@ const Layout = () => {
             <Link to="/profile" className="hover:text-gray-300">
               Profile
             </Link>
-            {/* Logout Link */}
-            
           </div>
         </div>
       </nav>
