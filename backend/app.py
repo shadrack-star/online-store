@@ -1,4 +1,4 @@
-import random
+import random, os
 from flask import Flask, request, jsonify
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, get_jwt
 from datetime import timedelta
@@ -8,11 +8,18 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from models import db, User, Product, Order, Review, OrderItem
 from sqlalchemy.exc import IntegrityError
+from dotenv import load_dotenv,dotenv_values
 
+
+load_dotenv()  # take environment variables from .env.
+postgress_pwd = os.getenv("POSTGRESS_PWD")
+
+# print(postgress_pwd)
 app = Flask(__name__)
 
 # Configurations
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///store.db"  # Update this to use PostgreSQL in production
+app.config["SQLALCHEMY_DATABASE_URI"] =f"postgresql://store_db_mhin_user:{postgress_pwd}"
+#"sqlite:///store.db"  # Update this to use PostgreSQL in production
 app.config["SECRET_KEY"] = "ZK80TsyUbJJenSzm_cKe0yyiDRhwpmVLWofdzwjPEmQ"
 app.config["JWT_SECRET_KEY"] = "U-YaTrD6uv_08QLDmclt4jZm0z5gQNdV2lOLfkwE3Eo"
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)

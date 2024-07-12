@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { UserContext } from "../context/UserContext";
 import { useContext } from "react";
+import {server_url} from "../../config"
 
 const Profile = () => {
   const {logoutUser}=useContext(UserContext);
@@ -14,7 +15,7 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchCurrentUser = () => {
-      fetch('http://localhost:5000/api/current_user', {
+      fetch(`${server_url}/api/current_user`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +54,7 @@ const Profile = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch(`http:localhost:5000/api/current_user/${currentUser.id}`, {
+    fetch(`${server_url}/api/current_user/${currentUser.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -128,7 +129,7 @@ const Profile = () => {
         />
         <button type="submit">Update Profile</button>
       </form>
-      <a href="/"
+      <a href="/login"
       className="bg-yellow-500 text-white px-6 py-3 font-semibold rounded-md"
               onClick={logoutUser}
               

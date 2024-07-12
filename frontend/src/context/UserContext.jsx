@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-
+import {server_url} from "../../config"
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -13,7 +13,7 @@ export const UserProvider = ({ children }) => {
 
   // Register User
   const registerUser = (name, email, password, role = 'customer', profile_image = '') => {
-    fetch('/api/register', {
+    fetch(`${server_url}/api/register`, {
       method: 'POST',
       body: JSON.stringify({ name, email, password, role, profile_image }),
       headers: {
@@ -39,7 +39,7 @@ export const UserProvider = ({ children }) => {
 
   // Login User
   const loginUser = (email, password) => {
-    fetch('/api/login', {
+    fetch(`${server_url}/api/login`, {
       method: 'POST',
       body: JSON.stringify({ email, password }),
       headers: {
@@ -67,7 +67,7 @@ export const UserProvider = ({ children }) => {
 
   // Logout User
   const logoutUser = () => {
-    fetch('http://localhost:5000/api/logout', {
+    fetch(`${server_url}/api/logout`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -96,7 +96,7 @@ export const UserProvider = ({ children }) => {
 
   // Update User Profile
   const updateUserProfile = (id, username, Password, profile_image) => {
-    fetch(`/api/current_user/${id}`, {
+    fetch(`${server_url}/api/current_user/${id}`, {
       method: 'PUT',
       body: JSON.stringify({ username, Password, profile_image }),
       headers: {
@@ -128,7 +128,7 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     if (authToken) {
-      fetch('/api/current_user', {
+      fetch(`${server_url}/api/current_user`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${authToken}`,

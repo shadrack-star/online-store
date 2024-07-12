@@ -2,6 +2,7 @@
 import { toast } from "react-toastify";
 // import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import {server_url} from "../../config"
 
 import React, { useState } from 'react';
 
@@ -31,7 +32,7 @@ const OrderForm = () => {
     // Handle form submission logic here
     console.log(formData);
     // Example: send data to backend, process order, etc.
-    fetch("http://localhost:5000/api/orders", {
+    fetch(`${server_url}/api/orders`, {
       // Adding method type
       method: "POST",
 

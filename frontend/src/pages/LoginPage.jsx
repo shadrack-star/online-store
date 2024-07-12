@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import {server_url} from "../../config"
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -10,7 +11,7 @@ const LoginPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     // Handle login logic here
-    fetch("http://localhost:5000/api/login", { 
+    fetch(`${server_url}/api/login`, { 
       
       // Adding method type 
       method: "POST", 

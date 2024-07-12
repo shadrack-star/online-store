@@ -1,6 +1,7 @@
 // import { ToastContainer } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import {server_url} from "../../config"
 
 const RegisterUser = () => {
   const [name, setName] = useState("");
@@ -17,7 +18,7 @@ const RegisterUser = () => {
       return;
     }
     // Handle registration logic here
-    fetch("http://localhost:5000/api/register", {
+    fetch(`${server_url}/api/register`, {
       // Adding method type
       method: "POST",
 

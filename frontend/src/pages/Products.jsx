@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import {server_url} from "../../config"
 
 export default function Products() {
   const navigate = useNavigate();
@@ -7,11 +8,11 @@ export default function Products() {
 
   useEffect(() => {
     // Example array of product IDs to fetch
-    const productIds = [11, 12, 13, 14, 15, 16]; // Replace with your desired product IDs or fetch dynamically
+    const productIds = [1, 2, 3, 4,5, 6]; // Replace with your desired product IDs or fetch dynamically
 
     // Fetch products by IDs
     const fetchProducts = () => {
-      fetch(`http://localhost:5000/api/products?ids=${productIds.join(',')}`)
+      fetch(`${server_url}/api/products?ids=${productIds.join(',')}`)
         .then((response) => {
           if (response.ok) {
             return response.json();
