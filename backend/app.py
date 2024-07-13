@@ -18,7 +18,7 @@ postgress_pwd = os.getenv("POSTGRESS_PWD")
 app = Flask(__name__)
 
 # Configurations
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ("POSTGRESS_PWD")
+app.config["SQLALCHEMY_DATABASE_URI"] =f"postgresql://store_db_mhin_user:{postgress_pwd}"
 #"sqlite:///store.db"  # Update this to use PostgreSQL in production
 app.config["SECRET_KEY"] = "ZK80TsyUbJJenSzm_cKe0yyiDRhwpmVLWofdzwjPEmQ"
 app.config["JWT_SECRET_KEY"] = "U-YaTrD6uv_08QLDmclt4jZm0z5gQNdV2lOLfkwE3Eo"
